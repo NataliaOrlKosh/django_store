@@ -1,0 +1,43 @@
+{% extends 'layout/basic.html' %}
+
+{% load thumbnail %}
+{% load static %}
+{% load bootstrap4 %}
+
+{% block title%} {{ category }} {% endblock %}
+
+{% block content %}
+<h2 class="mb-2">{{ category }}</h2>
+<div class="container-fluid mb-2">
+    <div class="row">
+        <div class="col">&nbsp;</div>
+        <form class="col-md-auto form-inline">
+            {% bootstrap_form form show_label=False %}
+            {% bootstrap_button content='Искать' button_type='submit' %}
+        </form>
+    </div>
+</div>
+{% if products %}
+<ul class="list-unstyled">
+    {% for product in products %}
+    <li class="media my-5 p-3 border">
+        {% url 'main:detail' category_pk=category.pk pk=product.pk as url %}
+        <a href="{{ url }}{{ all }}">
+            {% if product.image %}
+            <img class="mr-3" src="{% thumbnail product.image 'default' %}">
+            {% else %}
+            <img class="mr-3" src="{% static 'main/empty.jpg' %}">
+            {% endif %}
+        </a>
+        <div class="media-body">
+            <h3><a href="{{ url }}{{ all }}">{{ product.title }}</a></h3>
+            <div>{{ product.content }}</div>
+            <p class="text-right font-weight-bold"> Цена: {{ product.price }} руб.</p>
+            <p class="text-right font-italic">Добавлено: {{ product.created_at }}</p>
+        </div>
+    </li>
+    {% endfor %}
+</ul>
+{% bootstrap_pagination page url=keyword %}
+{% endif %}
+{% endblock %}

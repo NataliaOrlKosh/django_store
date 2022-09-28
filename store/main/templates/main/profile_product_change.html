@@ -1,0 +1,14 @@
+{% extends 'layout/basic.html' %}
+
+{% load bootstrap4 %}
+
+{% block title%}Правка данных о товаре{% endblock %}
+
+{% block content %}
+<h3>Здесь Вы можете изменить информацию о товаре</h3>
+<form method="post">
+    {% csrf_token %}
+    {% bootstrap_form form layout='horizontal' %}
+    {% buttons submit='Сохранить' %} {% endbuttons %}
+</form>
+{% endblock %}

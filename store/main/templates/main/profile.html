@@ -1,0 +1,49 @@
+{% extends 'layout/basic.html' %}
+
+{% load thumbnail %}
+{% load static %}
+{% load bootstrap4 %}
+
+{% block title%} Профиль пользователя{% endblock %}
+
+{% block content %}
+<h2>Профиль пользователя {{ user.username }}</h2>
+{% if user.first_name and user.last_name %}
+<p>Здравствуйте, {{ user.first_name }} {{ user.last_name }} </p>
+{% elif  user.first_name %}
+<p>Здравствуйте, {{ user.first_name }}</p>
+{% else %}
+<p>Здравствуйте</p>
+{% endif %}
+<h3>Ваши товары:</h3>
+{% if products %}
+<ul class="list-unstyled">
+    {% for product in products %}
+    <li class="media my-5 p-3 border">
+        {% url 'main:profile_product_detail' pk=product.pk as url %}
+        <a href="{{ url }}{{ all }}">
+            {% if product.image %}
+            <img class="mr-3" src="{% thumbnail product.image 'default' %}">
+            {% else %}
+            <img class="mr-3" src="{% static 'main/empty.jpg' %}">
+            {% endif %}
+        </a>
+        <div class="media-body">
+            <p> Категория {{ product.category}}</p>
+            <h3><a href="{{ url }}{{ all }}">{{ product.title }}</a></h3>
+            <div>{{ product.content }}</div>
+            <p class="text-right font-weight-bold">{{ product.price }} руб.</p>
+            <p class="text-right font-italic">{{ product.created_at }}</p>
+            <p class="text-right mt-2">
+                <a href="{% url 'main:profile_product_change' pk=product.pk%}">Изменить</a>
+                <a href="{% url 'main:profile_product_delete' pk=product.pk%}">Удалить</a>
+            </p>
+        </div>
+    </li>
+    {% endfor %}
+</ul>
+{% endif %}
+<p><a href="{% url 'main:profile_product_add' %}">'Добавить товар'</a> </p>
+{% endblock %}
+
+

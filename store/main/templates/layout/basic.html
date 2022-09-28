@@ -1,0 +1,73 @@
+{% load bootstrap4 %}
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+    <title>{% block title%} Главная страница {% endblock %} - Ваш магазин</title>
+    {% bootstrap_css %}
+    {% bootstrap_javascript jquery='slim' %}
+</head>
+<body class="container-fluid">
+    <header class="mb-4"></header>
+    <h1 class="display-3 text-center font-italic">
+        Товары
+    </h1>
+    </header>
+    <div class="row">
+        <ul class="col nav justify-content-end border font-italic">
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'main:register' %}">Регистрация</a>
+            </li>
+            {% if user.is_authenticated %}
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle"
+                    data-toggle="dropdown"
+                    href="{% url 'main:profile' %}"
+                    role="button" aria-haspopup="true"
+                    aria-expanded="false">Профиль</a>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" href="{% url 'main:profile' %}">Мои товары</a>
+                    <a class="dropdown-item" href="{% url 'main:profile_change' %}">Изменить личные данные</a>
+                    <a class="dropdown-item" href="{% url 'main:password_change' %}">Сменить пароль</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="{% url 'main:logout' %}">Выйти</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="{% url 'main:profile_delete' %}">Удалить пользователя</a>
+                </div>
+            </li>
+            {% else %}
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'main:login' %}">Вход</a>
+            </li>
+            {% endif %}
+        </ul>
+    </div>
+    <div class="row">
+        <nav class="col-md-auto nav flex-column border font-italic">
+        <a href="{% url 'main:index' %}">Главная</a>
+        {% for category in categories %}
+            {% ifchanged category.super_category.pk %}
+            <span class="nav-link root font-weight-bold">
+                {{ category.super_category.name }}
+            </span>
+            {% endifchanged %}
+            <a class="nav-link" href="{% url 'main:by_category' pk=category.pk %}"> {{ category.name }}</a>
+            {% endfor %}
+        <a href="{% url 'main:other' page='about' %}">О сайте</a>
+        </nav>
+        <section class="col border py-2">
+            {% bootstrap_messages %}
+            {% block content %}
+            {% endblock %}
+        </section>
+    </div>
+    <footer class="mt-5">
+        <p class="text-right font-italic">Здесь должен быть футер</p>
+    </footer>
+</body>
+</html>
